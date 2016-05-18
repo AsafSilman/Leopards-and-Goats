@@ -5,7 +5,10 @@
 # Advanced solution has the option of swapping the above or human vs human or computer vs computer
 
 #Asaf Silman 21985278
+<<<<<<< HEAD
 #Pranav Ganeswaran
+=======
+>>>>>>> origin/master
 
 from graphics import *
 import math
