@@ -5,7 +5,6 @@
 # Advanced solution has the option of swapping the above or human vs human or computer vs computer
 
 #Asaf Silman 21985278
-#Pranav Ganeswaran 
 
 from graphics import *
 import math
