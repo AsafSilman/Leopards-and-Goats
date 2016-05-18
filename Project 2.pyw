@@ -5,6 +5,7 @@
 # Advanced solution has the option of swapping the above or human vs human or computer vs computer
 
 #Asaf Silman 21985278
+#Pranav Ganeswaran 21965512 
 
 from graphics import *
 import math
@@ -34,22 +35,36 @@ def main():
     LeopardPieces = []
 
     #ALPHA CODE
-    addPiece(1,LeopardPieces, unOccup)
-    addPiece(4,LeopardPieces, unOccup)
-    addPiece(2,GoatPieces,unOccup)
-    addPiece(9,GoatPieces,unOccup)
-    addPiece(0,GoatPieces,unOccup)
-    print(unOccup)
-    print(GoatPieces)
-    print(blocked(LeopardPieces,unOccup))
+    #addPiece(1,LeopardPieces, unOccup)
+    #addPiece(4,LeopardPieces, unOccup)
+    #addPiece(2,GoatPieces,unOccup)
+    #addPiece(9,GoatPieces,unOccup)
+    #addPiece(0,GoatPieces,unOccup)
+    #print(unOccup)
+    #print(GoatPieces)
+    #print(blocked(LeopardPieces,unOccup))
     #END ALPHA CODE
 
     notify = Text(Point(wSize/2,40), 'Goats Turn')
     notify.setTextColor('blue')
     notify.draw(win)
 
+    print(unOccup)
+    
+    for i in range(3):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
+        drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
+        drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
+
+
+    print(unOccup)
+    print(GoatPieces)
+    print(GoatsOccup)
+    print(LeopardPieces)
+    print(LeopardsOccup)
+
+
     # let the human player move a Goat
     # let the computer move a Leopard
     # decide who won the game
@@ -144,6 +159,37 @@ def addPiece(position, Occup, unOccup):
     if position in unOccup:
         Occup.append(position);
         unOccup.remove(position)
+
+
+def drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify):
+    #changes the notification text
+    #gets the mouseclick and passes on "nn" index to check in list
+    #if nn not in the list, draws object and updates the lists
+    notify.setText("Goats's Turn")
+    for i in range(4):
+        pt = win.getMouse()
+        d,nn = findNN(pt,ptList)
+        if nn in unOccup:    
+            goat = Image(ptList[nn],"goat.png")
+            goat.draw(win)
+            GoatPieces.append(goat)
+            GoatsOccup.append(nn)
+            unOccup.remove(nn)
+    return []
+    
+def drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify):
+    #changes the notification text
+    #randomly chooses a spot from the unOccup list 
+    #uses index from unOccup list to draw the object with time delay for animated effect 
+    notify.setText("Leopard's Turn")
+    time.sleep(1)
+    index = random.choice(unOccup) 
+    leopard = Image(ptList[index],"leopard.png")
+    leopard.draw(win)
+    LeopardPieces.append(leopard)
+    LeopardsOccup.append(index)
+    unOccup.remove(index)
+    return []
 
   
 main()
