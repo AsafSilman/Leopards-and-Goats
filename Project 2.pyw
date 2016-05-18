@@ -7,6 +7,7 @@
 #Asaf Silman 21985278
 #Pranav Ganeswaran 21965512 
 
+
 from graphics import *
 import math
 import random
@@ -107,6 +108,7 @@ def blocked(Occup, unOccup):
     return blocked
 
 def blockedIndividual(piece,unOccup):
+    #Tests if an individual piece is blocked
     blocked = True
     for i in possMoves:
         if i[0] == piece:
