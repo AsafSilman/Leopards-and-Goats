@@ -96,6 +96,7 @@ def blocked(Occup, unOccup):
     return blocked
 
 def blockedIndividual(piece,unOccup):
+    #Tests if an individual piece is blocked
     blocked = True
     for i in possMoves:
         if i[0] == piece:
