@@ -28,7 +28,6 @@ def main():
     win.setCoords(0,0,wSize,wSize)
 
     ptList = drawBoard(win)
-
     GoatsOccup = []
     LeopardsOccup = []
     unOccup = list(range(0,24))
@@ -47,7 +46,7 @@ def main():
     #END ALPHA CODE
 
     notify = Text(Point(wSize/2,40), 'Goats Turn')
-    notify.setTextColor('blue')
+    notify.setTextColor('yellow')
     notify.draw(win)
 
     print(unOccup)
@@ -58,12 +57,15 @@ def main():
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
 
+    circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+    moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
 
-    print(unOccup)
-    print(GoatPieces)
-    print(GoatsOccup)
-    print(LeopardPieces)
-    print(LeopardsOccup)
+
+    #print(unOccup)
+    #print(GoatPieces)
+    #print(GoatsOccup)
+    #print(LeopardPieces)
+    #print(LeopardsOccup)
 
 
     # let the human player move a Goat
@@ -117,13 +119,36 @@ def blockedIndividual(piece,unOccup):
     return blocked
     
     
-def moveGoat(win,ptList,Occup,Pieces,unOccup):
+def moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex):
     # This function allows the human player to move a Goat to a valid location and updates the relevant lists. The move must be
     # animated slowly rather than an abrupt disappear and appear at the other location.
     # win is the GraphWin object, ptList is defined in drawBoard(), Occup is a list of occupied locations by the Goats, 
     # Pieces is a list of the Goat objects and unOccup is a list of empty locations. The function should allow the human to select and
     # unselect (by clicking twice) a piece. When a Goat is selected for a move, a mark (such as a small circle) must appear on it.
     # The mark should disappear when the piece is unselected or moved. This function does not return anything.
+
+    pt = win.getMouse()
+    d,nn = findNN(pt,ptList)
+    
+    if goatPt.getX() == ptList[nn].getX() and goatPt.getY() == ptList[nn].getY():
+        #this tests to see if the goat object returned by click is the same as the one selected in first click from selectGoat() function
+        circ.undraw()
+        circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+        moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
+
+    else:
+        #if valid move, performs a animated movement of goat
+        if checkValid(nn,goatIndex,unOccup):
+            x,y = (ptList[nn].getX() - goatPt.getX()),(ptList[nn].getY() - goatPt.getY())
+            for i in range(20):
+                goatObj.move(x/20,y/20)
+                time.sleep(0.01)
+            circ.undraw()
+        else:
+            #mouseclick elswhere causes cicle to be removed and selection process to happen again
+            circ.undraw()
+            circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+            moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
     return []
 
 
@@ -151,7 +176,7 @@ def findNN(pt, ptList):
     #print(dlist)
     d = min(dlist)
     nn = dlist.index(min(dlist))
-    #print(d) This is to check the distance
+    #print(d)---> This is to check the distance
     return d, nn
 
 def addPiece(position, Occup, unOccup):
@@ -168,7 +193,8 @@ def drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify):
     #gets the mouseclick and passes on "nn" index to check in list
     #if nn not in the list, draws object and updates the lists
     notify.setText("Goats's Turn")
-    for i in range(4):
+    length = len(GoatsOccup)
+    while len(GoatsOccup) < length+4:
         pt = win.getMouse()
         d,nn = findNN(pt,ptList)
         if nn in unOccup:    
@@ -191,7 +217,30 @@ def drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify):
     LeopardPieces.append(leopard)
     LeopardsOccup.append(index)
     unOccup.remove(index)
+    notify.setText("Goats's Turn")
     return []
+
+def selectGoat(win,ptList,GoatPieces,GoatsOccup):
+    #gets mouseclick and compares it to see if goat object in same place as mouse click
+        pt = win.getMouse()
+        d,goatIndex = findNN(pt,ptList)
+        for i in GoatPieces:
+            if i.getAnchor().getX() == ptList[goatIndex].getX() and i.getAnchor().getY() == ptList[goatIndex].getY():
+                goatObj = i
+                goatPt = i.getAnchor()
+                circ = Circle(ptList[goatIndex],7)
+                circ.setFill('cyan')
+                circ.draw(win)
+                return circ,goatObj,goatPt,goatIndex
+                
+def checkValid(nn,goatIndex,unOccup):
+    #checks to see if the index of the location you want to move to is in unOccup
+    #checks next to see if you index of goat to unoccupied space is a legal move
+    if nn in unOccup:
+        if [goatIndex,nn] in possMoves:
+            return True
+    else:
+        print("Invalid Move")
 
   
 main()
