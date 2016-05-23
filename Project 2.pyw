@@ -18,7 +18,8 @@ wSize = 800
 possMoves =[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[1, 0],[2, 1],[3, 2],[4,3],[5,4],[6, 5],[7, 6],[0, 7],[8, 9],[9,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,8],[9,8],[10,9],[11,10],[12,11],[13,12],[14,13],[15,14],[8,15],[16,17],[17,18],[18,19],[19,20],[20,21],[21,22],[22,23],[23,16],[17,16],[18,17],[19,18],[20,19],[21,20],[22,21],[23,22],[16,23],[0,8],[1,9],[2,10],[3,11],[4,12],[5,13],[6,14],[7,15],[8,16],[9,17],[10,18],[11,19],[12,20],[13,21],[14,22],[15,23],[8,0],[9,1],[10,2],[11,3],[12,4],[13,5],[14,6],[15,7],[16,8],[17,9],[18,10],[19,11],[20,12],[21,13],[22,14],[23, 15]]
 # maintain a list of possible moves as a global variable
 
-Leaps = [[0,16],[1,17],[2,18],[3,19],[4,20],[5,21],[6,22],[7,23],[16,0],[17,1],[18,2],[19,3],[20,4],[21,5],[22,6],[23,7],[0,2],[2,4],[4,6],[6,0],[2,0],[4,2],[6,4],[0,6],[8,10],[10,12],[12,14],[14,8],[10,8],[12,10],[14,12],[8,14],[16,18],[18,20],[20,22],[22,16],[18,16],[20,18],[22,20],[16,22]]
+#leas are orginised [Start, End, Middle]
+Leaps = [[0,16,8],[1,17,9],[2,18,10],[3,19,11],[4,20,12],[5,21,13],[6,22,14],[7,23,15],[16,0,8],[17,1,9],[18,2,10],[19,3,11],[20,4,12],[21,5,13],[22,6,14],[23,7,15],[0,2,1],[2,4,3],[4,6,5],[6,0,7],[2,0,1],[4,2,3],[6,4,5],[0,6,7],[8,10,9],[10,12,11],[12,14,13],[14,8,15],[10,8,9],[12,10,11],[14,12,13],[8,14,15],[16,18,17],[18,20,19],[20,22,21],[22,16,23],[18,16,17],[20,18,19],[22,20,21],[16,22,23]]
 
 # the main function should control the flow of the program, allow the players to place the Goats and Leopards and decide who has won
 # it uses the random function for placing the Leopards
@@ -27,6 +28,7 @@ def main():
     win.setBackground('green')
     win.setCoords(0,0,wSize,wSize)
 
+
     ptList = drawBoard(win)
     GoatsOccup = []
     LeopardsOccup = []
@@ -34,6 +36,8 @@ def main():
     GoatPieces = []
     LeopardPieces = []
 
+    
+    
     #ALPHA CODE
     #addPiece(1,LeopardPieces, unOccup)
     #addPiece(4,LeopardPieces, unOccup)
@@ -56,6 +60,7 @@ def main():
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
+        AImoveLeapord(win,ptList,LeopardsOccup,LeopardPieces,unOccup, GoatPieces, GoatsOccup)
 
     circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
     moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
@@ -71,7 +76,7 @@ def main():
     # let the human player move a Goat
     # let the computer move a Leopard
     # decide who won the game
-    
+
 def drawBoard(win): # DO NOT change this function. It is provided to help you. It draws the board and returns a list of Points (24 points)
     bk = wSize/8 # block size
     ptList = []
@@ -160,9 +165,57 @@ def AImoveLeapord(win,ptList,LeopardsOccup,LeopardPieces,unOccup, GoatPieces, Go
     # LeopardsOccup are locations occpupied by Leopards, GoatsOccup are locations occupied by the Goats, LeopardPieces and
     # GoatPieces are lists containing the actual objects. unOccup is a list of emtpy locations. This function performs the move and
     # updates the corresponding lists. It does not return anything. 
+    moves = []
+    for leopard in LeopardsOccup:
+        if leapable(leopard,GoatsOccup,unOccup):
+            move = leapable(leopard,GoatsOccup,unOccup)
+            goat = ptList[move[2]] #the goat variable now holds the point on the board
+            GoatsOccup.remove(move[2])
+            unOccup.append(move[2])
+
+            Leop = ptList[move[0]]
+            LeopardsOccup.remove(move[0])
+            unOccup.append(move[1])
+
+            #Removes the goat from the board
+            for i in GoatPieces:
+                if goat.getX() == i.getAnchor().getX() and goat.getY() == i.getAnchor().getY():
+                    GoatPieces.remove(i)
+
+            for i in LeopardPieces:
+                if Leop.getX() == i.getAnchor().getX() and Leop.getY() == i.getAnchor().getY():
+                    newPoint = ptList[move[1]]
+                    x,y = newPoint.getX() - i.getAnchor().getX(),newPoint.getY() - i.getAnchor().getY()
+                    for j in range(20):
+                        i.move(x/20,y/20)
+                        time.sleep(0.01)
+        if movable(leopard,unOccup):
+            for i in possMoves:
+                if i[0] == leopard and i[1] in unOccup:
+                    moves.append(i)
+    if not moves:
+        return False
+            
     return []
 
-
+def leapable(piece, GoatOccup,unOccup):
+    """
+    Tests the leopard piece to see whether it can perform a leap
+    if true it returns the list
+    otherwise it returns false
+    """
+    for i in Leaps:
+        if i[0] == piece and i[2] in GoatOccup and i[1] in unOccup:
+            return i
+    return False
+    
+def movable(piece,unOccup):
+    for i in possMoves:
+        if i[0] == piece and i[1] in unOccup:
+            return True
+    return False
+    
+    
 
 def findNN(pt, ptList):
     # returns the index number and distance of the nearest point from pt
@@ -181,7 +234,7 @@ def findNN(pt, ptList):
 
 def addPiece(position, Occup, unOccup):
     #if the position is in unOccup
-    #Add that position to goats Occup
+    #Add that position to list Occup
     #Then remove that number from Occup 
     if position in unOccup:
         Occup.append(position);
@@ -244,6 +297,3 @@ def checkValid(nn,goatIndex,unOccup):
 
   
 main()
-    
-    
-    
