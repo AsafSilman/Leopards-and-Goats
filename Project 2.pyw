@@ -24,8 +24,11 @@ Leaps = [[0,16,8],[1,17,9],[2,18,10],[3,19,11],[4,20,12],[5,21,13],[6,22,14],[7,
 # the main function should control the flow of the program, allow the players to place the Goats and Leopards and decide who has won
 # it uses the random function for placing the Leopards
 def main():
-    win = GraphWin('Problem Solving and Programming - Project 2',wSize,wSize)
-    win.setBackground('green')
+
+    win= drawStart()
+    
+    #win = GraphWin('Problem Solving and Programming - Project 2',wSize,wSize)
+    #win.setBackground('green')
     win.setCoords(0,0,wSize,wSize)
 
 
@@ -52,26 +55,26 @@ def main():
     notify = Text(Point(wSize/2,40), 'Goats Turn')
     notify.setTextColor('yellow')
     notify.draw(win)
-
-    print(unOccup)
     
-    for i in range(3):
+    for i in range(1):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
         AImoveLeapord(win,ptList,LeopardsOccup,LeopardPieces,unOccup, GoatPieces, GoatsOccup)
 
-    circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+
+    print(GoatsOccup)
+    print(unOccup)
+
+    try:
+        circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+    except TypeError:
+        circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
     moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
 
-
-    #print(unOccup)
-    #print(GoatPieces)
-    #print(GoatsOccup)
-    #print(LeopardPieces)
-    #print(LeopardsOccup)
-
+    print(GoatsOccup)
+    print(unOccup)
 
     # let the human player move a Goat
     # let the computer move a Leopard
@@ -87,11 +90,13 @@ def drawBoard(win): # DO NOT change this function. It is provided to help you. I
         pp.setWidth(5)
         pp.setOutline(color_rgb(255,255,0))
         pp.draw(win)
+        time.sleep(0.09)
     for i in range(8):
         ll = Line(ptList[i],ptList[i+16])
         ll.setWidth(5)
         ll.setFill(color_rgb(255,255,0))
         ll.draw(win)
+        time.sleep(0.09)
 
     "Exra code added to add circles at points of legal play to make UI more friendly for player"
     for i in ptList:
@@ -99,6 +104,7 @@ def drawBoard(win): # DO NOT change this function. It is provided to help you. I
         cir.setFill("Red")
         cir.setOutline("black")
         cir.draw(win)
+        time.sleep(0.01)
 
     return ptList
 
@@ -149,6 +155,12 @@ def moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIn
                 goatObj.move(x/20,y/20)
                 time.sleep(0.01)
             circ.undraw()
+
+            unOccup.append(goatIndex)
+            unOccup.remove(nn)
+            GoatsOccup.append(nn)
+            GoatsOccup.remove(goatIndex)
+            
         else:
             #mouseclick elswhere causes cicle to be removed and selection process to happen again
             circ.undraw()
@@ -274,17 +286,17 @@ def drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify):
     return []
 
 def selectGoat(win,ptList,GoatPieces,GoatsOccup):
-    #gets mouseclick and compares it to see if goat object in same place as mouse click
+        """gets mouseclick and compares it to see if goat object in same place as mouse click"""
         pt = win.getMouse()
-        d,goatIndex = findNN(pt,ptList)
+        d,nn = findNN(pt,ptList)
         for i in GoatPieces:
-            if i.getAnchor().getX() == ptList[goatIndex].getX() and i.getAnchor().getY() == ptList[goatIndex].getY():
+            if i.getAnchor().getX() == ptList[nn].getX() and i.getAnchor().getY() == ptList[nn].getY():
                 goatObj = i
                 goatPt = i.getAnchor()
-                circ = Circle(ptList[goatIndex],7)
+                circ = Circle(ptList[nn],7)
                 circ.setFill('cyan')
                 circ.draw(win)
-                return circ,goatObj,goatPt,goatIndex
+                return circ,goatObj,goatPt,nn
                 
 def checkValid(nn,goatIndex,unOccup):
     #checks to see if the index of the location you want to move to is in unOccup
@@ -295,5 +307,48 @@ def checkValid(nn,goatIndex,unOccup):
     else:
         print("Invalid Move")
 
+def isClicked(pt,button):
+    """tests if mouse click is within button or not"""
+    if pt.getX() >= button.getP1().getX() and pt.getX() <= button.getP2().getX() and pt.getY() >= button.getP1().getY() and pt.getY() <= button.getP2().getY():
+        return True
+    else:
+        return False
+
+def drawStart():
+    """buttons and labels in order of [Play,Quit]"""
+    button = [Rectangle(Point(100,100),Point(300,200)),Rectangle(Point(500,100),Point(700,200))]
+    labels = [Text(Point(200,150),"Play"),Text(Point(600,150),"Quit")]
+    win = GraphWin('Problem Solving and Programming - Project 2',wSize,wSize)
+    backg = Image(Point(400,400),"mountain.png")
+    backg.draw(win)
+    win.setCoords(0,0,wSize,wSize)
+    for i,j in zip(button,labels):
+        i.setFill("Yellow")
+        i.setOutline("red")
+        i.setWidth(3)
+        i.draw(win)
+        j.setStyle("bold italic")
+        j.setSize(20)
+        j.draw(win)
+
+    title = Text(Point(400,680),"Mountains Goats vs. Snow Leopards")
+    title.setFace("arial")
+    title.setStyle("bold")
+    title.setSize(30)
+    title.setFill("Red")
+    title.draw(win) 
+
+    while True:
+        pt = win.getMouse()
+        if isClicked(pt,button[0]):
+            title.undraw()
+            for i,j in zip(button,labels):
+                i.undraw()
+                j.undraw()
+            break
+        elif isClicked(pt,button[1]):
+            win.close()
+
+    return win
   
 main()
