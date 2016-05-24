@@ -52,11 +52,13 @@ def main():
     #print(blocked(LeopardPieces,unOccup))
     #END ALPHA CODE
 
-    notify = Text(Point(wSize/2,40), 'Goats Turn')
-    notify.setTextColor('yellow')
+    notify = Text(Point(wSize/2+200,40), 'Goats Turn')
+    notify.setTextColor('red')
+    notify.setSize(15)
+    notify.setStyle("bold")
     notify.draw(win)
     
-    for i in range(1):
+    for i in range(3):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
