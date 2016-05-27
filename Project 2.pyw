@@ -230,9 +230,17 @@ def makeMove(piece, move, unOccup, pieceOccup, pieceObjects, ptList):
                         time.sleep(0.01)
 
 def LeopardsWin(GoatOccup):
+    """
+    Tests to see if leopards win the game
+    Returns True/False
+    """
     return len(GoatOccup)==0
 
 def GoatsWin(GoatOccup, LeopardsOccup, unOccup):
+    """
+    Tests to see if goats win the game
+    Returns True/False
+    """
     for i in LeopardsOccup:
         if leapable(i,GoatOccup,unOccup): return False
         if movable(i, unOccup): return False
