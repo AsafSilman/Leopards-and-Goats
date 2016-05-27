@@ -69,11 +69,14 @@ def main():
 
     print(GoatsOccup)
     print(unOccup)
-
-    try:
-        circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
-    except TypeError:
-        circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+    
+    while True:
+        try:
+            circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+            break
+        except TypeError:
+            continue
+    
     moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
 
     print(GoatsOccup)
