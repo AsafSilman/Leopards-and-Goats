@@ -52,8 +52,10 @@ def main():
     #print(blocked(LeopardPieces,unOccup))
     #END ALPHA CODE
 
-    notify = Text(Point(wSize/2,40), 'Goats Turn')
-    notify.setTextColor('yellow')
+    notify = Text(Point(wSize/2+200,40), 'Goats Turn')
+    notify.setTextColor('Red')
+    notify.setStyle("bold")
+    notify.setSize(20)
     notify.draw(win)
     
     for i in range(3):
@@ -63,7 +65,6 @@ def main():
         AImoveLeapord(win,ptList,LeopardsOccup,LeopardPieces,unOccup, GoatPieces, GoatsOccup)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
         
-
 
     print(GoatsOccup)
     print(unOccup)
