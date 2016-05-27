@@ -229,6 +229,11 @@ def makeMove(piece, move, unOccup, pieceOccup, pieceObjects, ptList):
                         i.move(x/20,y/20)
                         time.sleep(0.01)
 
+def gameOver(GoatOccup, LeopardsOccup, unOccup):
+    for i in LeopardsOccup:
+        if leapable(i,GoatOccup,unOccup): return False
+        if movable(i, unOccup): return False
+    return True
 
 def leapable(piece, GoatOccup,unOccup):
     """
