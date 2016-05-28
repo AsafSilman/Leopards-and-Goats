@@ -14,10 +14,13 @@ import random
 import time
 
 wSize = 800
+
 possMoves =[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[1, 0],[2, 1],[3, 2],[4,3],[5,4],[6, 5],[7, 6],[0, 7],[8, 9],[9,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,8],[9,8],[10,9],[11,10],[12,11],[13,12],[14,13],[15,14],[8,15],[16,17],[17,18],[18,19],[19,20],[20,21],[21,22],[22,23],[23,16],[17,16],[18,17],[19,18],[20,19],[21,20],[22,21],[23,22],[16,23],[0,8],[1,9],[2,10],[3,11],[4,12],[5,13],[6,14],[7,15],[8,16],[9,17],[10,18],[11,19],[12,20],[13,21],[14,22],[15,23],[8,0],[9,1],[10,2],[11,3],[12,4],[13,5],[14,6],[15,7],[16,8],[17,9],[18,10],[19,11],[20,12],[21,13],[22,14],[23, 15]]
 # maintain a list of possible moves as a global variable
 Leaps = [[0,16,8],[1,17,9],[2,18,10],[3,19,11],[4,20,12],[5,21,13],[6,22,14],[7,23,15],[16,0,8],[17,1,9],[18,2,10],[19,3,11],[20,4,12],[21,5,13],[22,6,14],[23,7,15],[0,2,1],[2,4,3],[4,6,5],[6,0,7],[2,0,1],[4,2,3],[6,4,5],[0,6,7],[8,10,9],[10,12,11],[12,14,13],[14,8,15],[10,8,9],[12,10,11],[14,12,13],[8,14,15],[16,18,17],[18,20,19],[20,22,21],[22,16,23],[18,16,17],[20,18,19],[22,20,21],[16,22,23]]
 #leaps are orginised [Start, End, Middle] -> where the middle would have to be an occupided goat.
+objslist = []
+#list of all objects created in drawBoard()
 
 # the main function should control the flow of the program, allow the players to place the Goats and Leopards and decide who has won
 # it uses the random function for placing the Leopards
@@ -45,16 +48,19 @@ def main():
     LeopardPieces = []
 
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
-    notify.setTextColor('red')
-    notify.setSize(15)
+    notify.setTextColor('Blue')
+    notify.setSize(17)
     notify.setStyle("bold")
     notify.draw(win)
+
+    winner = "" #contains the name of the winner at the end of the game
     
-    for i in range(2):
+    for i in range(3):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
+ 
         
 
     while True:
@@ -95,6 +101,8 @@ def main():
         if LeopardsWin(GoatsOccup):
             print("Leopard's Win")
             break
+
+    drawEnd(win,notify,objslist,winner)
 
 def drawBoard(win): # DO NOT change this function. It is provided to help you.
     """
@@ -394,7 +402,7 @@ def drawStart():
     button = [Rectangle(Point(100,100),Point(300,200)),Rectangle(Point(500,100),Point(700,200))]
     labels = [Text(Point(200,150),"Play"),Text(Point(600,150),"Quit")]
     win = GraphWin('Problem Solving and Programming - Project 2',wSize,wSize)
-    backg = Image(Point(400,400),"mountain.png")
+    backg = Image(Point(400,400),"mountain2.png")
     backg.draw(win)
     win.setCoords(0,0,wSize,wSize)
     for i,j in zip(button,labels):
@@ -426,7 +434,50 @@ def drawStart():
 
     return win
 
-#if __name__ == __main__:
+def drawEnd(win,notify,objslist,winner):
 
-main()
+    """
+    Draws the end screen after game is won or lost
+    Allows user to replay the game by taking them to the start screen
+    """
+
+    notify.undraw()
+    for i in objslist:
+        i.undraw
+    
+    button = [Rectangle(Point(100,100),Point(300,200)),Rectangle(Point(500,100),Point(700,200))]
+    labels = [Text(Point(200,150),"Replay"),Text(Point(600,150),"Quit")]
+    
+    backg = Image(Point(400,400),"mountain2.png")
+    backg.draw(win)
+    win.setCoords(0,0,wSize,wSize)
+    for i,j in zip(button,labels):
+        i.setFill("Yellow")
+        i.setOutline("Black")
+        i.setWidth(3)
+        i.draw(win)
+        j.setStyle("bold")
+        j.setSize(20)
+        j.draw(win)
+
+    title = Text(Point(400,680),winner+" Thanks for playing!")
+    title.setFace("times roman")
+    title.setStyle("bold")
+    title.setSize(30)
+    title.setFill("Red")
+    title.draw(win)
+
+    while True:
+        pt = win.getMouse()
+        if isClicked(pt,button[0]):
+            title.undraw()
+            for i,j in zip(button,labels):
+                i.undraw()
+                j.undraw()
+            win.close() #closes window and reopens to restart the program
+            main()
+            break
+        elif isClicked(pt,button[1]):
+            win.close()
+            
 
