@@ -536,4 +536,4 @@ def drawEnd(win,notify,objslist,winner):
         elif isClicked(pt,button[1]):
             win.close()
             
-
+main()
