@@ -47,9 +47,28 @@ def main():
     GoatPieces = []
     LeopardPieces = []
 
+<<<<<<< HEAD
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
     notify.setTextColor('Blue')
     notify.setSize(17)
+=======
+    
+    
+    #ALPHA CODE
+    #addPiece(1,LeopardPieces, unOccup)
+    #addPiece(4,LeopardPieces, unOccup)
+    #addPiece(2,GoatPieces,unOccup)
+    #addPiece(9,GoatPieces,unOccup)
+    #addPiece(0,GoatPieces,unOccup)
+    #print(unOccup)
+    #print(GoatPieces)
+    #print(blocked(LeopardPieces,unOccup))
+    #END ALPHA CODE
+
+    notify = Text(Point(wSize/2+200,40), 'Goats Turn')
+    notify.setTextColor('red')
+    notify.setSize(15)
+>>>>>>> refs/remotes/origin/master
     notify.setStyle("bold")
     notify.draw(win)
 
@@ -102,7 +121,28 @@ def main():
             print("Leopard's Win")
             break
 
+<<<<<<< HEAD
     drawEnd(win,notify,objslist,winner)
+=======
+    print(GoatsOccup)
+    print(unOccup)
+    
+    while True:
+        try:
+            circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
+            break
+        except TypeError:
+            continue
+    
+    moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
+
+    print(GoatsOccup)
+    print(unOccup)
+
+    # let the human player move a Goat
+    # let the computer move a Leopard
+    # decide who won the game
+>>>>>>> refs/remotes/origin/master
 
 def drawBoard(win): # DO NOT change this function. It is provided to help you.
     """
@@ -277,6 +317,22 @@ def makeMove(piece, move, unOccup, pieceOccup, pieceObjects, ptList):
                         i.move(x/20,y/20)
                         time.sleep(0.01)
 
+def LeopardsWin(GoatOccup):
+    """
+    Tests to see if leopards win the game
+    Returns True/False
+    """
+    return len(GoatOccup)==0
+
+def GoatsWin(GoatOccup, LeopardsOccup, unOccup):
+    """
+    Tests to see if goats win the game
+    Returns True/False
+    """
+    for i in LeopardsOccup:
+        if leapable(i,GoatOccup,unOccup): return False
+        if movable(i, unOccup): return False
+    return True
 
 def leapable(piece, GoatOccup,unOccup):
     """
