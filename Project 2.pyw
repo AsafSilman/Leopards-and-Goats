@@ -47,34 +47,19 @@ def main():
     GoatPieces = []
     LeopardPieces = []
 
-<<<<<<< HEAD
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
     notify.setTextColor('Blue')
     notify.setSize(17)
-=======
-    
-    
-    #ALPHA CODE
-    #addPiece(1,LeopardPieces, unOccup)
-    #addPiece(4,LeopardPieces, unOccup)
-    #addPiece(2,GoatPieces,unOccup)
-    #addPiece(9,GoatPieces,unOccup)
-    #addPiece(0,GoatPieces,unOccup)
-    #print(unOccup)
-    #print(GoatPieces)
-    #print(blocked(LeopardPieces,unOccup))
-    #END ALPHA CODE
 
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
     notify.setTextColor('red')
     notify.setSize(15)
->>>>>>> refs/remotes/origin/master
     notify.setStyle("bold")
     notify.draw(win)
 
     winner = "" #contains the name of the winner at the end of the game
     
-    for i in range(3):
+    for i in range(2):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
@@ -121,9 +106,9 @@ def main():
             print("Leopard's Win")
             break
 
-<<<<<<< HEAD
+
     drawEnd(win,notify,objslist,winner)
-=======
+
     print(GoatsOccup)
     print(unOccup)
     
@@ -142,7 +127,6 @@ def main():
     # let the human player move a Goat
     # let the computer move a Leopard
     # decide who won the game
->>>>>>> refs/remotes/origin/master
 
 def drawBoard(win): # DO NOT change this function. It is provided to help you.
     """
