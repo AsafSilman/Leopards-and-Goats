@@ -5,8 +5,10 @@
 # Advanced solution has the option of swapping the above or human vs human or computer vs computer
 
 #Asaf Silman: 21985278
-#Pranav Ganeswaran: 21965512 
+#Pranav Ganeswaran: 21965512
 
+### Reference to the picture used in the game:
+### Cookie Sound, (2015), grossglockner mountain austria [ONLINE]. Available at: http://www.cookiesound.com/wp-content/uploads/2015/08/grossglockner-mountain-austria-winter-1-800x800.jpg [Accessed 28 May 2016].
 
 from graphics import *
 import math
@@ -59,58 +61,43 @@ def main():
 
     winner = "" #contains the name of the winner at the end of the game
     
-    for i in range(2):
+    for i in range(3):
     # let the human player place Billy Goats
     # let the computer place Snow Leopards
         drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify)
         drawLeopard(win,ptList,LeopardsOccup,unOccup,LeopardPieces,notify)
- 
-        
+        time.sleep(0.5)
+     
 
     while True:
-        
-        print("Before moves")
-        print(GoatsOccup)
-        print(LeopardsOccup)
-        print(unOccup)
-        print()
             
         while True:
             try:
                 circ,goatObj,goatPt,goatIndex = selectGoat(win,ptList,GoatPieces,GoatsOccup)
                 moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
-                print("Goats move")
-                print(GoatsOccup)
-                print(LeopardsOccup)
-                print(unOccup)
-                print()
                 break
             except TypeError:
                 continue
 
         if GoatsWin(GoatsOccup, LeopardsOccup, unOccup) == True:
-                print("Goat's Win")
+                #print("Goat's Win")
                 break
 
         notify.setText("Leopard's Move")
+        time.sleep(0.5)
         AImoveLeopard(win,ptList,LeopardsOccup,LeopardPieces,unOccup, GoatPieces, GoatsOccup)
+        time.sleep(0.2)
         notify.setText("Goat's Move")
-        
-        print("Leopard's Move")
-        print(GoatsOccup)
-        print(LeopardsOccup)
-        print(unOccup)
-        print()
 
         if LeopardsWin(GoatsOccup):
-            print("Leopard's Win")
+            #print("Leopard's Win")
             break
 
 
     drawEnd(win,notify,objslist,winner)
 
-    print(GoatsOccup)
-    print(unOccup)
+    #print(GoatsOccup)
+    #print(unOccup)
     
     while True:
         try:
@@ -121,8 +108,8 @@ def main():
     
     moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex)
 
-    print(GoatsOccup)
-    print(unOccup)
+    #print(GoatsOccup)
+    #print(unOccup)
 
     # let the human player move a Goat
     # let the computer move a Leopard
@@ -160,32 +147,6 @@ def drawBoard(win): # DO NOT change this function. It is provided to help you.
     return ptList
 
 
-def blocked(Occup, unOccup):
-    """
-    returns True if all pieces in Occup are blocked otherwise False
-    Initialises variable to True
-    """
-    blocked = True
-    for i in Occup:
-        #If ANY piece in Occup is NOT blocked
-        #then blocked must be set to false
-        if not blockedIndividual(i,unOccup):
-            blocked = False
-    return blocked
-
-def blockedIndividual(piece,unOccup):
-    """
-    Tests if an individual piece is blocked
-    This is a helper method for blocked.
-    """
-    blocked = True
-    for i in possMoves:
-        if i[0] == piece:
-            if i[1] in unOccup:
-                blocked = False
-    return blocked
-    
-    
 def moveGoat(win,ptList,GoatsOccup,GoatPieces,unOccup,circ,goatObj,goatPt,goatIndex):
     """
     This function allows the human player to move a Goat to a valid location and updates the relevant lists. The move must be
@@ -353,16 +314,6 @@ def findNN(pt, ptList):
     nn = dlist.index(min(dlist))
     #print(d)---> This is to check the distance
     return d, nn
-
-def addPiece(position, Occup, unOccup):
-    """
-    If the position is in unOccup
-    Add that position to list Occup
-    Then remove that number from Occup 
-    """
-    if position in unOccup:
-        Occup.append(position);
-        unOccup.remove(position)
 
 
 def drawGoat(win,ptList,GoatsOccup,unOccup,GoatPieces,notify):
