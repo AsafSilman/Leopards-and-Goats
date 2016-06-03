@@ -47,11 +47,9 @@ def main():
     GoatPieces = []
     LeopardPieces = []
 
-<<<<<<< HEAD
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
     notify.setTextColor('Blue')
     notify.setSize(17)
-=======
     
     
     #ALPHA CODE
@@ -68,7 +66,6 @@ def main():
     notify = Text(Point(wSize/2+200,40), 'Goats Turn')
     notify.setTextColor('red')
     notify.setSize(15)
->>>>>>> refs/remotes/origin/master
     notify.setStyle("bold")
     notify.draw(win)
 
@@ -121,9 +118,7 @@ def main():
             print("Leopard's Win")
             break
 
-<<<<<<< HEAD
     drawEnd(win,notify,objslist,winner)
-=======
     print(GoatsOccup)
     print(unOccup)
     
@@ -141,8 +136,7 @@ def main():
 
     # let the human player move a Goat
     # let the computer move a Leopard
-    # decide who won the game
->>>>>>> refs/remotes/origin/master
+    # decide who won the gamebb
 
 def drawBoard(win): # DO NOT change this function. It is provided to help you.
     """
